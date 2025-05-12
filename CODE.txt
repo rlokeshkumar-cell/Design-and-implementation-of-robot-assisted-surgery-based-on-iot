@@ -1,0 +1,189 @@
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(12,11,2,3,4,5);
+
+String readString;
+#define light 6
+#define buzzer 13
+#define en 9
+#define rm1 A0
+#define rm2 A1
+#define lm1 A2
+#define lm2 A3
+
+void setup() {
+lcd.begin(16,2);
+Serial.begin(9600);
+pinMode(buzzer, OUTPUT);
+pinMode(light, OUTPUT);
+pinMode(en, OUTPUT);
+pinMode(rm1, OUTPUT);
+pinMode(rm2, OUTPUT);
+pinMode(lm1, OUTPUT);
+pinMode(lm2, OUTPUT);
+
+lcd.clear();
+lcd.setCursor(0,0);  
+lcd.print("VOICE OPERATED  ");   
+lcd.setCursor(0,1);  
+lcd.print("ROBOTIC ARM     ");
+delay(1000);
+digitalWrite(buzzer, HIGH);
+delay(500);
+digitalWrite(buzzer, LOW);
+delay(500);
+
+digitalWrite(buzzer, HIGH);
+delay(500);
+digitalWrite(buzzer, LOW);
+delay(500);
+
+digitalWrite(en, HIGH);
+delay(10);
+top();
+delay(2000);
+stop();
+delay(300);
+bottom();
+delay(2000);
+stop();
+delay(300);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+while(Serial.available()){
+  delay(3);
+  char c = Serial.read();
+  readString+=c;
+}
+
+if(readString.length() >0)
+{
+ lcd.clear();
+lcd.setCursor(0,0);  
+lcd.print("                ");   
+lcd.setCursor(0,1);  
+lcd.print("ROBOTIC ARM     ");
+delay(1000);
+lcd.setCursor(0,0);  
+lcd.print(readString);  
+  
+                               
+  if(readString == "top")
+  {
+   stop();
+   delay(10);
+   top();
+   delay(2000);
+   stop();
+  }
+ else if(readString == "bottom")
+  {
+  stop();
+  delay(10);
+  bottom();
+  delay(2000);
+  stop();
+  }
+  else if(readString == "open")
+  { 
+    stop();
+    delay(10);
+    openx();
+    delay(2000);
+    stop();
+  }
+  else if(readString == "close")
+  {
+    stop();
+    delay(10);
+    closex();
+    delay(2000);
+    stop();
+  }
+  else if(readString == "stop")
+  {
+    stop();
+    delay(100);
+  }
+
+  else if(readString == "sound")
+  {
+   stop();
+   digitalWrite(buzzer, HIGH);
+   digitalWrite(light, HIGH);
+   delay(3000);
+   digitalWrite(buzzer, 0);
+   digitalWrite(light, 0);
+   delay(300);
+   }
+  else if(readString == "light on")
+  {
+   stop();
+   digitalWrite(light, HIGH);
+   delay(300);
+   }
+    else if(readString == "light off")
+  {
+   stop();
+   digitalWrite(light,0);
+   delay(300);
+   }
+  
+  else if(readString == "light of")
+  {
+   stop();
+   digitalWrite(light,0);
+   delay(300);
+   }  
+   else{
+    delay(100);
+  }
+  readString = "";
+}
+}
+
+
+
+void stop()
+{
+digitalWrite(rm1, 0);
+digitalWrite(rm2, 0);
+digitalWrite(lm1, 0);
+digitalWrite(lm2, 0); 
+delay(500);
+}
+void top()
+{
+digitalWrite(rm1, 1);
+digitalWrite(rm2, 0);
+digitalWrite(lm1, 0);
+digitalWrite(lm2, 0); 
+delay(500);
+}
+void bottom()
+{
+digitalWrite(rm1, 0);
+digitalWrite(rm2, 1);
+digitalWrite(lm1, 0);
+digitalWrite(lm2, 0); 
+delay(500);
+}
+
+void openx()
+{
+digitalWrite(rm1, 0);
+digitalWrite(rm2, 0);
+digitalWrite(lm1, 0);
+digitalWrite(lm2, 1); 
+delay(500);
+}
+void closex()
+{
+digitalWrite(rm1, 0);
+digitalWrite(rm2, 0);
+digitalWrite(lm1, 1);
+digitalWrite(lm2, 0); 
+delay(500);
+}
